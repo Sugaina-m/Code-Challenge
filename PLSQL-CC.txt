@@ -1,0 +1,77 @@
+create table part (
+part_no number(6),
+part_name char(1),
+in_stock varchar(90),
+part_price number(6,2),
+part_desc varchar2(50)
+);
+
+
+insert into part values(01,'A',20,210,'M');
+insert into part values(02,'B',21,200,'N');
+insert into part values(03,'C',10,220,'0');
+insert into part values(04,'D',15,230,'P');
+insert into part values(05,'E',22,240,'Q');
+
+1)CC1
+
+create or replace procedure ques1(I in number)
+is
+cursor C1 is select * from part where part_no=1;
+emp c1%rowtype;
+begin
+open c1;
+loop
+fetch c1 into emp;
+exit when c1%notfound;
+DBMS_output.put_line(emp.part_no|| '  ' || emp.part_name|| '  '||
+emp.in_stock|| '  '||emp.part_price||' ' || emp.part_desc);
+end loop;
+end;
+
+2)CC2
+
+
+create table Back_up(
+part_no number(6),
+part_name varchar(20),
+modify_date date);
+
+
+create or replace trigger backup_trigger
+After insert or update or delete  on part
+for each row
+declare 
+cursor N is select * from part;
+begin
+if updating then
+insert into Back_up values(:new.part_no,:new.part_price,sysdate);
+end if;
+end;
+
+
+3)CC3
+
+create or replace procedure ques3
+ is
+ cursor N is select * from part;
+ DET N% rowtype;
+ begin
+ open N;
+ loop
+ fetch N into CUS;
+ if CUS.in_stock<16 then
+ update part set part_price=250;
+ end if;
+ end loop;
+ end;
+
+4)CC4
+
+ set serverout on;
+ begin
+ for A in (select * from part)
+ loop
+ DBMS_output.put_line('value of Part_name:' || a.part_name);
+ end loop;
+ end;
